@@ -4,7 +4,8 @@ import sqlite3
 import google.generativeai as gen
 import pandas as pd
 from dotenv import load_dotenv
-from sql import create_and_insert_data
+
+# Load environment variables
 load_dotenv()
 
 # Configure Google API
@@ -15,17 +16,46 @@ if not GOOGLE_API_KEY:
 
 gen.configure(api_key=GOOGLE_API_KEY)
 
+# Function to create tables if they don't exist
+def create_tables(db_path="company.db"):
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    # Create employees table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS employees (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            Name TEXT NOT NULL,
+            Department TEXT NOT NULL,
+            Salary REAL NOT NULL,
+            Hire_Date TEXT NOT NULL
+        )
+    """)
+
+    # Create departments table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS departments (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            Name TEXT NOT NULL UNIQUE,
+            Manager TEXT NOT NULL
+        )
+    """)
+
+    conn.commit()
+    conn.close()
+
+# Ensure tables exist at app startup
+create_tables()
+
+# Function to get Gemini response
 def get_gemini_response(question, prompt):
     model = gen.GenerativeModel('gemini-pro')
     response = model.generate_content([prompt[0], question])
     return response.text
 
+# Function to execute SQL query and return results
 def read_sql_query(sql, db_path="company.db"):
     try:
-        # Create database if it doesn't exist
-        if not os.path.exists(db_path):
-            create_and_insert_data(db_path)
-            
         conn = sqlite3.connect(db_path)
         df = pd.read_sql_query(sql, conn)
         conn.close()
@@ -35,6 +65,7 @@ def read_sql_query(sql, db_path="company.db"):
     except Exception as e:
         return f"Error executing query: {str(e)}"
 
+# SQL prompt for Gemini AI
 prompt = [
     """
     You are an expert in converting English Questions to SQL query!
@@ -76,11 +107,11 @@ prompt = [
     """
 ]
 
-# Streamlit App
+# Streamlit UI
 st.set_page_config(page_title="SQL Query Assistant")
-st.header("Gemini App To Retrieve SQL Data")
+st.header("Gemini AI - SQL Query Assistant")
 
-# Add example questions to help users
+# Sidebar with example queries
 st.sidebar.header("Example Questions")
 st.sidebar.write("""
 - Show all employees in Marketing
@@ -90,30 +121,40 @@ st.sidebar.write("""
 - Show employees hired after 2020
 """)
 
-question = st.text_input("Input your question:", key="input")
-submit = st.button("Ask the question")
+# Display existing tables in the database
+st.subheader("📋 Employees Table")
+employees_df = read_sql_query("SELECT * FROM employees", "company.db")
+if isinstance(employees_df, str):
+    st.error(employees_df)
+else:
+    st.dataframe(employees_df, use_container_width=True)
 
-# if submit is clicked
+st.subheader("📋 Departments Table")
+departments_df = read_sql_query("SELECT * FROM departments", "company.db")
+if isinstance(departments_df, str):
+    st.error(departments_df)
+else:
+    st.dataframe(departments_df, use_container_width=True)
+
+# User input for question
+st.subheader("🔍 Ask a Question to Generate SQL Query")
+question = st.text_input("Enter your question:", key="input")
+submit = st.button("Generate SQL Query")
+
+# Process the user's question
 if submit:
     if question:
         response = get_gemini_response(question, prompt)
-        st.subheader("Generated SQL Query:")
+        st.subheader("🔹 Generated SQL Query:")
         st.code(response, language="sql")
         
-        st.subheader("Query Results:")
+        st.subheader("🔹 Query Results:")
         results = read_sql_query(response, "company.db")
         
-        if isinstance(results, str):  # Error occurred
+        if isinstance(results, str):  # If there's an error
             st.error(results)
         else:
-            # Display the DataFrame
-            st.dataframe(
-                results,
-                use_container_width=True,
-                hide_index=True
-            )
-            
-            # Also show total number of results
+            st.dataframe(results, use_container_width=True)
             st.write(f"Total results: {len(results)} rows")
     else:
         st.warning("Please enter a question.")

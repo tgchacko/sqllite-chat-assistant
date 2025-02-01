@@ -1,8 +1,4 @@
 streamlit
 google-generativeai
 pandas
-<<<<<<< HEAD
 python-dotenv
-=======
-python-dotenv
->>>>>>> 4803a8c88fc68191f56c735b66e70635027db2f9

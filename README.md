@@ -146,4 +146,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Contact
 
 Your Name - tharakhgeorge@yahoo.co.in
-Project Link: https://github.com/tgchacko/chat-assistant-sqlite
+Project Link: [https://github.com/tgchacko/chat-assistant-sqlite](https://github.com/tgchacko/sqllite-chat-assistant)

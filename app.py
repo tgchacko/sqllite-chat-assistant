@@ -5,11 +5,6 @@ import google.generativeai as gen
 import pandas as pd
 from dotenv import load_dotenv
 
-
-st.cache_resource.clear()
-
-
-@st.cache_data
 # Load environment variables
 load_dotenv()
 

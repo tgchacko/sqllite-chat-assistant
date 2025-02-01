@@ -3,7 +3,7 @@
 A Streamlit-based web application that converts natural language questions into SQL queries and executes them using Google's Gemini AI. The application helps users interact with a SQLite database using plain English instead of writing SQL queries directly.
 
 ## Demo
-Access the live application here: [SQL Query Assistant](https://sqllite-chat-assistant.herokuapp.com)
+Access the live application here: [Chat Assistant for SQLite Database with Gemini AI](https://sqllite-chat-assistant.streamlit.app)
 
 ## Features
 - Natural language to SQL query conversion
@@ -21,9 +21,9 @@ sql-query-assistant/
 ├── requirements.txt       # Project dependencies
 ├── .env.example          # Example environment variables file
 ├── .gitignore            # Git ignore rules
-├── Procfile              # Heroku deployment configuration
+├── Procfile              # Streamlit deployment configuration
 ├── runtime.txt           # Python runtime specification
-├── setup.sh              # Streamlit configuration for Heroku
+├── setup.sh              # Streamlit configuration
 └── README.md             # Project documentation
 ```
 
@@ -31,7 +31,7 @@ sql-query-assistant/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/tgchacko/sqllite-chat-assistant.git
+git clone https://github.com/tgchacko/chat-assistant-sqlite.git
 cd sql-query-assistant
 ```
 
@@ -96,18 +96,17 @@ streamlit run app.py
 
 2. Database Constraints
    - Currently uses SQLite, which may not be suitable for production workloads
-   - Database is recreated on each deployment to Heroku
+   - Database is recreated on each deployment to Streamlit
 
 3. Performance
    - Response time depends on Gemini AI API latency
-   - Limited by Streamlit and Heroku free tier constraints
+   - Limited by Streamlit free tier constraints
 
 ## Suggestions for Improvement
 
 1. Database Enhancements
    - Migrate to a production-grade database like PostgreSQL
    - Add more tables and relationships
-   - Implement data persistence on Heroku
 
 2. Features
    - Add query history
@@ -142,10 +141,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgments
 
 - Google Gemini AI for natural language processing
-- Streamlit for the web interface
-- Heroku for hosting
+- Streamlit for the web interface and hosting
 
 ## Contact
 
 Your Name - tharakhgeorge@yahoo.co.in
-Project Link: https://github.com/tgchacko/sqllite-chat-assistant
+Project Link: https://github.com/tgchacko/chat-assistant-sqlite

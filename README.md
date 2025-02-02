@@ -77,14 +77,14 @@ streamlit run app.py
 ## Database Schema
 
 ### Employees Table
-- ID (INTEGER PRIMARY KEY)
+- Employee_ID (INTEGER PRIMARY KEY)
 - Name (TEXT)
 - Department (TEXT)
 - Salary (INTEGER)
 - Hire_Date (TEXT)
 
 ### Departments Table
-- ID (INTEGER PRIMARY KEY)
+- Department_ID (INTEGER PRIMARY KEY)
 - Name (TEXT UNIQUE)
 - Manager (TEXT)
 
